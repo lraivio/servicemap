@@ -395,15 +395,30 @@ define 'app/views', ['underscore', 'backbone', 'backbone.marionette', 'leaflet',
     class TransportModeControlsView extends SMItemView
         template: 'transport-mode-controls'
         events:
-            'click .personalisations a': 'switch_transport_mode'
+            'click .transport-modes a': 'switch_transport_mode'
+            'click .transport-details a': 'switch_transport_details'
 
         serializeData: ->
-            transport_modes: p13n.get('transport')
+            transport_modes = p13n.get('transport')
+            bicycle_details_classes = ''
+            if transport_modes.public_transport
+                bicycle_details_classes += 'no-arrow '
+            unless transport_modes.bicycle
+                bicycle_details_classes += 'hidden'
+
+            transport_modes: transport_modes
+            transport_details: p13n.get('transport_details')
+            bicycle_details_classes: bicycle_details_classes
 
         switch_transport_mode: (ev) ->
             ev.preventDefault()
             type = $(ev.target).closest('li').data 'type'
             p13n.toggle_transport type
+
+        switch_transport_details: (ev) ->
+            ev.preventDefault()
+            type = $(ev.target).closest('li').data 'type'
+            p13n.toggle_transport_details type
 
     class RouteControllersView extends SMItemView
         template: 'route-controllers'
